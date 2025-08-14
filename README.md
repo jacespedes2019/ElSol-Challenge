@@ -1,5 +1,3 @@
-Perfecto, aquí tienes el README.md completo con todos los pasos, ejemplos de payloads, credenciales dummy usadas y la nota sobre que la documentación del backend está en /docs:
-
 # 🩺 ElSol - RAG Clínico (Prueba Técnica)
 
 Este proyecto implementa un sistema de **transcripción de audio**, **extracción de información clínica** y **búsqueda conversacional** usando un backend en **FastAPI** y un frontend en **Streamlit**.
