@@ -19,9 +19,9 @@ Asegúrate de tener instalado:
 ## 🚀 Ejecución del Proyecto
 
 ### 1. Clonar el repositorio
-git clone https://github.com/jacespedes2019/ElSol-Challenge.git
-
-## cd ElSol-Challenge (es indispensable pararse en la raíz del proyecto)
+	git clone https://github.com/jacespedes2019/ElSol-Challenge.git
+#### Es indispensable pararse en la raíz del proyecto 
+	cd ElSol-Challenge 
 
 ### 2. Crear archivo .env
 
@@ -32,7 +32,7 @@ Este contiene las claves y configuraciones necesarias.
 
 ### 3. Construir y levantar el backend y frontend con Docker
 
-docker-compose up --build
+	docker-compose up --build
 
 Esperar a que salga el siguiente mensaje: 
 
@@ -59,89 +59,171 @@ Todos los passwords ya están hasheados internamente.
 
 ⸻
 
+### Cómo testear la funcionalidad (desde el frontend)
+1.	Acceder al frontend
+   
+Ir a http://localhost:8501 en tu navegador.
+
+2.	Iniciar sesión
+
+•	En la pantalla inicial, ingresar un usuario y contraseña de la tabla de credenciales.
+
+•	Ejemplo: Usuario: promotor Contraseña: promotor123
+
+•	Presionar Login.
+
+•	Si las credenciales son correctas, se almacenará el token JWT para las siguientes acciones.
+
+3.	Subir un archivo de audio para transcripción
+
+•	Ir a la sección “Subir Audio”.
+
+•	Seleccionar un archivo .wav o .mp3.
+
+•	Presionar Procesar Audio.
+
+•	El sistema transcribirá el contenido y lo indexará en la base vectorial.
+
+4.	Subir un documento PDF o imagen para OCR
+
+•	Ir a la sección “Subir Documento”.
+
+•	Seleccionar un PDF o imagen (JPG, PNG).
+
+•	Presionar Procesar Documento.
+
+•	El texto detectado se guardará junto con los metadatos del paciente.
+
+5.	Realizar una consulta al chatbot
+	
+ •	Ir a la sección “Consulta”.
+
+•	Escribir una pregunta como: ¿Qué diagnóstico tiene Juan Pérez?
+	
+ •	(Opcional) Aplicar filtros de fecha, edad o nombre.
+	
+ •	Presionar Enviar Pregunta.
+	
+ •	El chatbot devolverá la respuesta junto con las citas de los documentos relevantes.
+
+	
+ 6.	Ver resultados
+	
+ •	En cada sección, el frontend mostrará mensajes de éxito o error.
+	
+ •	En el chat, se mostrarán también los IDs de las fuentes para trazabilidad.
+
 ### 📌 Ejemplos de uso de la API
 
-### 1. Autenticación y obtención de token
-
-curl -X POST http://localhost:8000/login \
--H "Content-Type: application/json" \
--d '{"username": "promotor", "password": "promotor123"}'
-
-Respuesta:
-
-{
-  "access_token": "JWT_GENERADO",
-  "token_type": "bearer"
-}
+### Descripción de los endpoints disponibles
+	•	POST /login → Autenticación de usuario y obtención de token JWT.
+	•	POST /upload_audio → Sube un archivo de audio (.wav, .mp3) y realiza transcripción + extracción de información.
+	•	POST /upload_doc → Sube un PDF o imagen y extrae texto vía OCR.
+	•	POST /chat → Permite realizar consultas en lenguaje natural sobre la información almacenada.
+	•	GET /docs → Documentación Swagger del backend.
+	•	GET /redoc → Documentación ReDoc del backend.
 
 
-⸻
+#### 1. Autenticación y obtención de token
 
-### 2. Subir Audio
-
-curl -X POST http://localhost:8000/upload_audio \
--H "Authorization: Bearer JWT_GENERADO" \
--F "file=@muestra.wav"
+	curl -X POST http://localhost:8000/login \
+	-H "Content-Type: application/json" \
+	-d '{"username": "promotor", "password": "promotor123"}'
 
 Respuesta:
 
-{
-  "ok": true,
-  "source_id": "abc123",
-  "chunks_indexed": 8
-}
+	{
+	  "access_token": "JWT_GENERADO",
+	  "token_type": "bearer"
+	}
 
 
 ⸻
 
-### 3. Subir Documento (PDF/Imagen)
+#### 2. Subir Audio
 
-curl -X POST http://localhost:8000/upload_doc \
--H "Authorization: Bearer JWT_GENERADO" \
--F "file=@muestra.pdf"
+	curl -X POST http://localhost:8000/upload_audio \
+	-H "Authorization: Bearer JWT_GENERADO" \
+	-F "file=@muestra.wav"
+	
+Respuesta:
+	
+	{
+	  "ok": true,
+	  "source_id": "abc123",
+	  "chunks_indexed": 8
+	}
 
 
 ⸻
 
-4. Consultar Chat
+#### 3. Subir Documento (PDF/Imagen)
 
-curl -X POST http://localhost:8000/chat \
--H "Authorization: Bearer JWT_GENERADO" \
--H "Content-Type: application/json" \
--d '{
-  "query": "¿Qué diagnóstico tiene Juan Pérez?",
-  "filters": {
-    "$and": [
-      {
-        "patient_name": {
-          "$eq": "Juan Pérez"
-        }
-      },
-      {
-        "date": {
-          "$gte": "2025-07-01",
-          "$lte": "2025-07-31"
-        }
-      },
-      {
-        "age": {
-          "$gte": 18,
-          "$lte": 65
-        }
-      }
-    ]
-  }
-}
+	curl -X POST http://localhost:8000/upload_doc \
+	-H "Authorization: Bearer JWT_GENERADO" \
+	-F "file=@muestra.pdf"
+
+
+⸻
+
+#### 4. Consultar Chat
+
+		curl -X POST http://localhost:8000/chat \
+		-H "Authorization: Bearer JWT_GENERADO" \
+		-H "Content-Type: application/json" \
+		-d '{
+		  "query": "¿Qué diagnóstico tiene Juan Pérez?",
+		  "filters": {
+		    "$and": [
+		      {
+		        "patient_name": {
+		          "$eq": "Juan Pérez"
+		        }
+		      },
+		      {
+		        "date": {
+		          "$gte": "2025-07-01",
+		          "$lte": "2025-07-31"
+		        }
+		      },
+		      {
+		        "age": {
+		          "$gte": 18,
+		          "$lte": 65
+		        }
+		      }
+		    ]
+		  }
+		}
 
 Respuesta:
 
-{
-  "answer": "El paciente presenta síntomas compatibles con...",
-  "citations": ["abc123"]
-}
+	{
+	  "answer": "El paciente presenta síntomas compatibles con...",
+	  "citations": ["abc123"]
+	}
 
 
 ⸻
+
+### Supuestos realizados
+	•	Los nombres de pacientes pueden venir tanto en audio como en los documentos; si no aparece, se etiqueta como “desconocido”.
+	•	La fecha se normaliza a YYYY-MM-DD cuando se identifica en el texto; de lo contrario, se usa la fecha actual al indexar.
+	•	La metadata mínima para búsquedas incluye: source_id, patient_name, date y age.
+	•	El LLM no debe inventar datos; se guía con prompts restrictivos y RAG. Aun así, se devuelve contexto y citas.
+	•	El almacenamiento de usuarios es de demostración (dummy); se asume que en producción se integrará un IAM real.
+	•	Se asume que todo lo que entra para el mismo nombre es el mismo usuario.
+
+### Buenas prácticas aplicadas
+	•	Dockerización del backend y frontend para ejecución consistente.
+	•	Autenticación JWT con control de roles (promotor, medico, admin).
+	•	Cifrado de contraseñas con bcrypt.
+	•	Arquitectura modular en FastAPI con separación por responsabilidades.
+	•	Uso de embeddings semánticos propios para mejorar la búsqueda contextual.
+	•	Validación de inputs y control de errores.
+	•	Documentación automática de endpoints vía Swagger y ReDoc.
+	•	Compatibilidad multi-arch en el Dockerfile para correr en Intel y ARM (Apple Silicon).
+
 
 ### 📂 Estructura del proyecto
 <img width="496" height="1274" alt="image" src="https://github.com/user-attachments/assets/5e994e31-33aa-4689-ab09-7e1882171861" />
