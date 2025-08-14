@@ -29,6 +29,7 @@ Asegúrate de tener instalado:
 
 El contenido del archivo .env será enviado adjunto en el correo de respuesta.
 Este contiene las claves y configuraciones necesarias.
+Ubicarlo en: ElSol-Challenge/.env
 
 ⸻
 
