@@ -40,8 +40,7 @@ Este contiene las claves y configuraciones necesarias.
 
 Esperar a que salga el siguiente mensaje: 
 
-<img width="1180" height="138" alt="image" src="https://github.com/user-attachments/assets/dfe23a76-6847-4a81-9256-48dfc1f93452" />
-
+<img width="1200" height="234" alt="image" src="https://github.com/user-attachments/assets/0f023008-40d6-4c4d-a21b-e4b39a8cce13" />
 
 Esto arrancará el backend en http://localhost:8000 y su documentación en http://localhost:8000/docs
 
