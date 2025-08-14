@@ -20,16 +20,17 @@ Asegúrate de tener instalado:
 
 ### 1. Clonar el repositorio
 git clone https://github.com/jacespedes2019/elsol-rag-clinico.git
-cd elsol-rag-clinico
 
-2. Crear archivo .env
+### cd elsol-rag-clinico (es indispensable pararse en la raíz del proyecto)
+
+### 2. Crear archivo .env
 
 El archivo .env será enviado adjunto en el correo de respuesta.
 Este contiene las claves y configuraciones necesarias.
 
 ⸻
 
-3. Construir y levantar el backend y frontend con Docker
+### 3. Construir y levantar el backend y frontend con Docker
 
 docker-compose up --build
 
@@ -44,7 +45,7 @@ El frontend estará disponible en http://localhost:8501
 
 ⸻
 
-🔑 Credenciales de prueba (Base de datos dummy)
+### 🔑 Credenciales de prueba (Base de datos dummy)
 
 Se incluye un sistema básico de autenticación JWT con usuarios simulados.
 Todos los passwords ya están hasheados internamente.
@@ -57,9 +58,9 @@ admin	admin	admin123
 
 ⸻
 
-📌 Ejemplos de uso de la API
+### 📌 Ejemplos de uso de la API
 
-1. Autenticación y obtención de token
+### 1. Autenticación y obtención de token
 
 curl -X POST http://localhost:8000/login \
 -H "Content-Type: application/json" \
@@ -75,7 +76,7 @@ Respuesta:
 
 ⸻
 
-2. Subir Audio
+### 2. Subir Audio
 
 curl -X POST http://localhost:8000/upload_audio \
 -H "Authorization: Bearer JWT_GENERADO" \
@@ -92,7 +93,7 @@ Respuesta:
 
 ⸻
 
-3. Subir Documento (PDF/Imagen)
+### 3. Subir Documento (PDF/Imagen)
 
 curl -X POST http://localhost:8000/upload_doc \
 -H "Authorization: Bearer JWT_GENERADO" \
@@ -141,12 +142,12 @@ Respuesta:
 
 ⸻
 
-📂 Estructura del proyecto
+### 📂 Estructura del proyecto
 <img width="496" height="1274" alt="image" src="https://github.com/user-attachments/assets/5e994e31-33aa-4689-ab09-7e1882171861" />
 
 ⸻
 
-📚 Notas finales
+### 📚 Notas finales
 	•	La documentación técnica completa está documentacion.pdf.
 	•	Este sistema usa embeddings propios generados con SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2") para mejorar la búsqueda semántica.
 	•	El backend está protegido con autenticación JWT y control de roles.
