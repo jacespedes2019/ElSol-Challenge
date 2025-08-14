@@ -27,7 +27,7 @@ Asegúrate de tener instalado:
 
 ### 2. Crear archivo .env
 
-El archivo .env será enviado adjunto en el correo de respuesta.
+El contenido del archivo .env será enviado adjunto en el correo de respuesta.
 Este contiene las claves y configuraciones necesarias.
 
 ⸻
