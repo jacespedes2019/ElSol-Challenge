@@ -22,16 +22,17 @@ Rol en el Sistema:
 ===============================================================================
 """
 import os, time
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import Depends, FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.asr import transcribe_audio, get_asr
 from app.extract import extract_structured, naive_extract
 from app.ocr import extract_text_from_file
 from app.rag import index_transcript, retrieve_chunks
 from app.llm import chat_completion
-from app.models import UploadResponse, ChatQuery, ChatResponse
+from app.models import LoginBody, UploadResponse, ChatQuery, ChatResponse
 from app.logging_utils import span, logger
 from app.deps import get_embedder
+from app.security import authenticate_user, create_access_token, require_roles
 from app.storage import embed_texts, get_collection
 from dotenv import load_dotenv
 load_dotenv()
@@ -71,8 +72,16 @@ def warmup():
 def health():
     return {"status": "ok"}
 
+@app.post("/auth/login")
+def login(body: LoginBody):
+    u = authenticate_user(body.username, body.password)
+    if not u:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    token = create_access_token(sub=u["username"], role=u["role"])
+    return {"access_token": token, "token_type": "bearer", "role": u["role"]}
+
 @app.post("/upload_audio", response_model=UploadResponse)
-async def upload_audio(file: UploadFile = File(...)):
+async def upload_audio(file: UploadFile = File(...), _user=Depends(require_roles("promotor","medico","admin"))):
     try:
         os.makedirs("data/uploads", exist_ok=True)
         path = f"data/uploads/{file.filename}"
@@ -116,7 +125,7 @@ async def upload_audio(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(query: ChatQuery):
+async def chat(query: ChatQuery, _user=Depends(require_roles("promotor","medico","admin"))):
     try:
         with span("RAG: RETRIEVE"):
             chunks = retrieve_chunks(query.query, filters=query.filters)
@@ -144,7 +153,7 @@ async def chat(query: ChatQuery):
     
 
 @app.post("/upload_doc", response_model=UploadResponse)
-async def upload_doc(file: UploadFile = File(...)):
+async def upload_doc(file: UploadFile = File(...), _user=Depends(require_roles("promotor","medico","admin"))):
     """
     Sube un PDF o imagen, extrae el texto (OCR si hace falta), lo “extrae” (structured/unstructured)
     y lo indexa igual que el audio.

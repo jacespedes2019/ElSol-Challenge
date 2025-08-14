@@ -12,6 +12,46 @@ st.set_page_config(page_title="ElSol - RAG clínico", page_icon="🩺", layout="
 st.title("🩺 ElSol - RAG Clínico (Demo)")
 st.caption(f"Backend: {BACKEND_URL}")
 
+# --- Auth simple en sidebar ---
+with st.sidebar:
+    st.subheader("🔐 Autenticación")
+    if "token" not in st.session_state:
+        st.session_state.token = None
+        st.session_state.role = None
+
+    if st.session_state.token:
+        st.success(f"Conectado ({st.session_state.role})")
+        if st.button("Cerrar sesión"):
+            st.session_state.token = None
+            st.session_state.role = None
+            st.rerun()
+    else:
+        u = st.text_input("Usuario", value="promotor")
+        p = st.text_input("Contraseña", value="promotor123", type="password")
+        if st.button("Iniciar sesión"):
+            try:
+                r = requests.post(f"{BACKEND_URL}/auth/login", json={"username": u, "password": p}, timeout=20)
+                if r.ok:
+                    data = r.json()
+                    st.session_state.token = data["access_token"]
+                    st.session_state.role = data.get("role")
+                    st.rerun()
+                else:
+                    st.error(r.text)
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+def auth_headers():
+    if not st.session_state.token:
+        return {}
+    return {"Authorization": f"Bearer {st.session_state.token}"}
+
+# Bloquea UI si no hay login
+if not st.session_state.token:
+    st.warning("Inicia sesión para usar la app.")
+    st.stop()
+
+
 tabs = st.tabs(["📤 Subir Audio", "📄 Subir PDF/Imagen", "💬 Chat"])
 
 # --------------------------
@@ -26,7 +66,7 @@ with tabs[0]:
             files = {"file": (audio_file.name, audio_file.getvalue(), audio_file.type or "application/octet-stream")}
             try:
                 with st.spinner("Subiendo y transcribiendo..."):
-                    resp = requests.post(f"{BACKEND_URL}/upload_audio", files=files, timeout=120)
+                    resp = requests.post(f"{BACKEND_URL}/upload_audio", files=files, headers=auth_headers(), timeout=120)
                 if resp.ok:
                     st.success("✅ Audio procesado")
                     st.json(resp.json())
@@ -48,7 +88,7 @@ with tabs[1]:
             files = {"file": (doc_file.name, doc_file.getvalue(), doc_file.type or "application/octet-stream")}
             try:
                 with st.spinner("Subiendo y extrayendo texto..."):
-                    resp = requests.post(f"{BACKEND_URL}/upload_doc", files=files, timeout=180)
+                    resp = requests.post(f"{BACKEND_URL}/upload_doc", files=files, headers=auth_headers(), timeout=180)
                 if resp.ok:
                     st.success("✅ Documento procesado")
                     st.json(resp.json())
@@ -101,7 +141,7 @@ with tabs[2]:
 
             try:
                 with st.spinner("Consultando..."):
-                    resp = requests.post(f"{BACKEND_URL}/chat", json=payload, timeout=120)
+                    resp = requests.post(f"{BACKEND_URL}/chat", json=payload, headers=auth_headers(), timeout=120)
                 if resp.ok:
                     data = resp.json()
                     st.markdown("### 🧠 Respuesta")

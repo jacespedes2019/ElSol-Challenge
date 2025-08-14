@@ -28,3 +28,7 @@ httpx
 
 # Tests
 pytest
+
+# Security
+python-jose[cryptography]
+passlib[bcrypt]

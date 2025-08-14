@@ -47,3 +47,7 @@ class ChatQuery(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     citations: List[str]
+    
+class LoginBody(BaseModel):
+    username: str
+    password: str
