@@ -95,13 +95,15 @@ async def upload_audio(file: UploadFile = File(...)):
             info = extract_structured(transcript)
             patient = info.patient_name or "desconocido"
             date = info.date
-            logger.info(f"[EXTRACT] patient={patient} date={date} symptoms={len(info.symptoms)}")
+            age = info.age
+            logger.info(f"[EXTRACT] patient={patient} date={date} age={age} symptoms={len(info.symptoms)}")
 
         with span("INDEX: EMBEDDINGS + UPSERT"):
             result = index_transcript(
                 transcript=transcript,
                 patient_name=patient,
                 date_str=date,
+                age=age,
                 source_id=None
             )
 
