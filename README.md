@@ -27,12 +27,14 @@ Asegúrate de tener instalado:
 
 ### 2. Crear archivo .env
 
-El archivo .env será enviado adjunto en el correo de respuesta.
+El contenido del archivo .env será enviado adjunto en el correo de respuesta.
 Este contiene las claves y configuraciones necesarias.
 
 ⸻
 
 ### 3. Construir y levantar el backend y frontend con Docker
+
+#### Precaución: En Windows el build debido a las librerías puede demorarse hasta 10 min o un poco más, en Mac si es más rápido
 
 	docker-compose up --build
 
