@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+faster-whisper
+sentence-transformers<3
+qdrant-client
+openai
+httpx
+pytest
+python-multipart
+chromadb

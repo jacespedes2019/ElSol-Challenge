@@ -19,10 +19,10 @@
 
 ## 💡 Consideraciones
 
-- Puedes asumir lo que necesites para resolver la prueba (formatos, flujos, bases de datos, etc.), pero **debes documentar claramente tus decisiones y supuestos**.
-- Se recomienda usar **Python + FastAPI**, pero puedes estructurar el proyecto como desees.
-- La parte de frontend es **opcional**.
-- Si no alcanzas a terminar todo, **lo importante es la documentación técnica y el razonamiento detrás de tu solución**.
+- Puedes asumir lo que necesites para resolver la prueba (formatos, flujos, bases de datos, etc.), pero debes documentar claramente tus decisiones y supuestos.
+- Se recomienda usar Python + FastAPI, pero puedes estructurar el proyecto como desees.
+- La parte de frontend es opcional.
+- Si no alcanzas a terminar todo, lo importante es la documentación técnica y el razonamiento detrás de tu solución.
 
 ---
 
@@ -99,18 +99,18 @@ Debe incluir:
 
 ## 🌟 PLUS (Opcionales – Suman puntos)
 
-- 🟢 Transcripción en **tiempo real** (streaming o chunked).
+- 🟢 Transcripción en tiempo real (streaming o chunked).
 - 🟢 Cliente simple (ej: React) para subir audio y consultar al chatbot.
-- 🟢 Subida de **PDFs o imágenes** asociadas al paciente (con OCR/parsing).
+- 🟢 Subida de PDFs o imágenes asociadas al paciente (con OCR/parsing).
 - 🟢 Diferenciación de hablantes (paciente vs promotor).
-- 🟢 Buenas prácticas de **MLOps** (pipelines, versionado, tests).
+- 🟢 Buenas prácticas de MLOps (pipelines, versionado, tests).
 - 🟢 Seguridad: autenticación, protección de endpoints, cifrado, control de acceso.
 
 ---
 
 ## ⏳ Tiempo estimado
 
-- Esta prueba está diseñada para completarse en un máximo de **2 días efectivos (~16 horas)**.
+- Esta prueba está diseñada para completarse en un máximo de 2 días efectivos (~16 horas).
 - No necesitas terminar todo, pero debes documentar claramente:
   - Qué entregaste.
   - Qué decidiste no implementar.
@@ -133,14 +133,14 @@ Debe incluir:
 
 ## 🔐 Recursos disponibles
 
-- Se te proporcionará una **API Key de Azure OpenAI** si deseas usar GPT-4 para el chatbot.
+- Se te proporcionará una API Key de Azure OpenAI si deseas usar GPT-4 para el chatbot.
 - Puedes utilizar cualquier motor de transcripción o LLM, mientras expliques y justifiques bien tu decisión.
 
 ---
 
 ## 📨 ¿Cómo entregar?
 
-1. Haz un **fork privado** de este repositorio.
+1. Haz un fork privado de este repositorio.
 2. Agrega como colaborador a `David-Sol-AI`.
 3. Sube tu solución al repositorio.
 4. Agrega tu documento técnico (`documentacion.pdf` o `documentacion.md`) en la raíz.
