@@ -50,10 +50,11 @@ El frontend estará disponible en http://localhost:8501
 Se incluye un sistema básico de autenticación JWT con usuarios simulados.
 Todos los passwords ya están hasheados internamente.
 
-Usuario	Rol	Contraseña
-promotor	promotor	promotor123
-medico	medico	medico123
-admin	admin	admin123
+|Usuario	|Rol	|Contraseña|
+|----------|----------|----------|
+|promotor	|promotor	|promotor123|
+|medico	|medico	|medico123|
+|admin	|admin	|admin123|
 
 
 ⸻
