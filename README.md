@@ -2,6 +2,8 @@
 
 Este proyecto implementa un sistema de **transcripción de audio**, **extracción de información clínica** y **búsqueda conversacional** usando un backend en **FastAPI** y un frontend en **Streamlit**.
 
+Por Jairo Adolfo Céspedes Plata
+
 La documentación interactiva del backend está disponible en:
 - **Swagger UI:** `http://localhost:8000/docs`
 
