@@ -35,10 +35,13 @@ class ChatQuery(BaseModel):
     query: str
     filters: Optional[Dict[str, Any]] = Field(
         default=None,
-        example={
-            "patient_name": {"$eq": "Juan Pérez"},
-            "date_range": ["2025-07-01", "2025-07-31"]
-        }
+        example = {
+        "$and": [
+        {"patient_name": {"$eq": "Juan Pérez"}},
+        {"date": {"$gte": "2025-07-01", "$lte": "2025-07-31"}},
+        {"age": {"$gte": 18, "$lte": 65}}
+          ]
+      }
     )
 
 class ChatResponse(BaseModel):

@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  elsil-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elsil-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env   # variables opcionales (Azure, etc.)
+    environment:
+      # Defaults si no están en .env
+      - CHROMA_DIR=/app/data/chroma
+      - CHROMA_PERSIST=1
+      - CHROMA_COLLECTION=elsol_conversations
+    volumes:
+      - ./data:/app/data              # persistencia (chroma, uploads, extracts)
+      - ./app:/app/app                # hot-reload del código (opcional)
+      - ./README.md:/app/README.md    # opcional
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

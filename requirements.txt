@@ -2,11 +2,29 @@ fastapi
 uvicorn[standard]
 python-dotenv
 pydantic
+python-multipart
+
+# ASR
 faster-whisper
+ffmpeg-python
+
+# Embeddings / NLP
 sentence-transformers<3
-qdrant-client
+numpy
+scipy
+
+# Vector store (ChromaDB soporta <=3.11)
+chromadb==1.0.16
+
+# OCR / PDF
+easyocr
+Pillow
+pdfplumber
+pdf2image
+
+# LLM
 openai
 httpx
+
+# Tests
 pytest
-python-multipart
-chromadb

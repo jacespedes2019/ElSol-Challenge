@@ -26,6 +26,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.asr import transcribe_audio, get_asr
 from app.extract import extract_structured, naive_extract
+from app.ocr import extract_text_from_file
 from app.rag import index_transcript, retrieve_chunks
 from app.llm import chat_completion
 from app.models import UploadResponse, ChatQuery, ChatResponse
@@ -113,7 +114,7 @@ async def upload_audio(file: UploadFile = File(...)):
     except Exception as e:
         logger.exception("❌ Error en /upload_audio")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(query: ChatQuery):
     try:
@@ -139,4 +140,68 @@ async def chat(query: ChatQuery):
         }
     except Exception as e:
         logger.exception("❌ Error en /chat")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.post("/upload_doc", response_model=UploadResponse)
+async def upload_doc(file: UploadFile = File(...)):
+    """
+    Sube un PDF o imagen, extrae el texto (OCR si hace falta), lo “extrae” (structured/unstructured)
+    y lo indexa igual que el audio.
+    """
+    try:
+        os.makedirs("data/docs", exist_ok=True)
+        path = f"data/docs/{file.filename}"
+
+        with span("SAVE FILE (DOC)"):
+            size = 0
+            with open(path, "wb") as f:
+                while True:
+                    chunk = await file.read(1024 * 1024)  # 1MB
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    f.write(chunk)
+            logger.info(f"[FILE] Guardado {path} ({size/1e6:.2f} MB)")
+
+        with span("DOC: EXTRACT TEXT (OCR/PDF)"):
+            text, kind = extract_text_from_file(path, file.content_type)
+            logger.info(f"[DOC] kind={kind} chars={len(text)}")
+
+            if not text or len(text.strip()) < 5:
+                raise HTTPException(status_code=400, detail="No se pudo extraer texto del documento.")
+
+        with span("EXTRACT: STRUCTURED FIELDS (DOC)"):
+            info = extract_structured(text)  # usa mismo extractor que audio
+            patient = (getattr(info, "structured", None) or getattr(info, "patient_name", None))
+            # compat: si usas ClinicalExtract, viene dentro de info.structured
+            if hasattr(info, "structured"):
+                s = info.structured
+                patient_name = s.patient_name or "desconocido"
+                date = s.date
+                age = s.age if hasattr(s, "age") else None
+            else:
+                # si conservaste el PatientInfo anterior
+                patient_name = info.patient_name or "desconocido"
+                date = info.date
+                age = getattr(info, "age", None)
+
+            logger.info(f"[EXTRACT/DOC] patient={patient_name} date={date} age={age}")
+
+        with span("INDEX: EMBEDDINGS + UPSERT (DOC)"):
+            result = index_transcript(
+                transcript=text,
+                patient_name=patient_name,
+                date_str=date,
+                age=age,
+                source_id=None
+            )
+
+        logger.info("[PIPELINE/DOC] COMPLETADO")
+        return {"ok": True, "source_id": result["source_id"], "chunks_indexed": result["chunks_indexed"]}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("❌ Error en /upload_doc")
         raise HTTPException(status_code=500, detail=str(e))
