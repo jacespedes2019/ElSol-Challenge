@@ -19,9 +19,9 @@ Asegúrate de tener instalado:
 ## 🚀 Ejecución del Proyecto
 
 ### 1. Clonar el repositorio
-git clone https://github.com/jacespedes2019/elsol-rag-clinico.git
+git clone https://github.com/jacespedes2019/ElSol-Challenge.git
 
-### cd elsol-rag-clinico (es indispensable pararse en la raíz del proyecto)
+## cd ElSol-Challenge (es indispensable pararse en la raíz del proyecto)
 
 ### 2. Crear archivo .env
 
