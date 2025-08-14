@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   elsil-api:
     build:
@@ -15,9 +13,8 @@ services:
       - CHROMA_PERSIST=1
       - CHROMA_COLLECTION=elsol_conversations
     volumes:
-      - ./data:/app/data
-      - ./app:/app/app
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+      - ./data:/app/data  # Solo la data persistente
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
   elsil-ui:
     build:
@@ -27,7 +24,6 @@ services:
     ports:
       - "8501:8501"
     environment:
-      # URL del backend para que el frontend apunte a la API
       - BACKEND_URL=http://elsil-api:8000
     depends_on:
       - elsil-api
